@@ -1,22 +1,32 @@
 package ua.goit.java;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 /**
  * Created by Vasiliy Kylik on 09.04.2017.
  */
 public class Bootstrap {
-  public static void main(String[] args) {
-    SerialExecutor<Integer> executor = new SerialExecutor<>();
-    executor.addTask(new AddTask(1, -2));
-    executor.addTask(new AddTask(1, 2), result -> result >= 0);
-    executor.addTask(new AddTask(1, -2), result -> result >= 0);
-    executor.addTask(new AddTask(Integer.MAX_VALUE, 1), result -> result >= 0);
 
-    executor.execute();
+  public static void main(String[] args) {
+    ApplicationContext applicationContext = new ClassPathXmlApplicationContext("application-context.xml");
+    Bootstrap bootstrap = applicationContext.getBean("bootstrap", Bootstrap.class);
+    bootstrap.execute();
+  }
+
+  public void execute() {
+    SerialExecutor<Integer> serialExecutor = new SerialExecutor<>();
+    serialExecutor.addTask(new AddTask(1, -2));
+    serialExecutor.addTask(new AddTask(1, 2), result -> result >= 0);
+    serialExecutor.addTask(new AddTask(1, -2), result -> result >= 0);
+    serialExecutor.addTask(new AddTask(Integer.MAX_VALUE, 1), result -> result >= 0);
+
+    serialExecutor.execute();
 // через метод Reference
     System.out.println("Valid Results");
-    executor.getValidResults().forEach(System.out::println);
+    serialExecutor.getValidResults().forEach(System.out::println);
     System.out.println("Invalid Results");
-    executor.getInvalidResults().forEach(System.out::println);
+    serialExecutor.getInvalidResults().forEach(System.out::println);
   }
 
   private static class AddTask implements Task<Integer> {
