@@ -7,29 +7,20 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * Created by Vasiliy Kylik on 09.04.2017.
  */
-public class Bootstrap implements ApplicationContextAware {
-  public void setApplicationContext(ApplicationContext applicationContext) {
-    this.applicationContext = applicationContext;
-  }
+public class Bootstrap {
 
-  private ApplicationContext applicationContext;
   private TaskProvider<Integer> taskProvider;
-  /*private Executor<Integer> executor;*/
-
-/*  public Bootstrap(TaskProvider<Integer> taskProvider) {
-    this.taskProvider = taskProvider;
-  }*/
+  private ExecutorFactory executorFactory;
 
   public static void main(String[] args) {
     ApplicationContext applicationContext = new ClassPathXmlApplicationContext("application-context.xml");
     Bootstrap bootstrap = applicationContext.getBean("bootstrap", Bootstrap.class);
-    bootstrap.setApplicationContext(applicationContext);
     bootstrap.execute();
     bootstrap.execute();
   }
 
   public void execute() {
-Executor<Integer> executor = getExecutor();
+    Executor<Integer> executor = executorFactory.getIntegerExecutor();
     taskProvider.getAllTasks().forEach(executor::addTask);
     executor.execute();
     System.out.println("Valid Results");
@@ -38,15 +29,11 @@ Executor<Integer> executor = getExecutor();
     executor.getInvalidResults().forEach(System.out::println);
   }
 
-  private  Executor<Integer> getExecutor(){
-    return (Executor<Integer>) applicationContext.getBean("serialExecutor");
-  }
-
   public void setTaskProvider(TaskProvider<Integer> taskProvider) {
     this.taskProvider = taskProvider;
   }
 
-/*  public void setExecutor(Executor<Integer> executor) {
-    this.executor = executor;
-  }*/
+  public void setExecutorFactory(ExecutorFactory executorFactory) {
+    this.executorFactory = executorFactory;
+  }
 }

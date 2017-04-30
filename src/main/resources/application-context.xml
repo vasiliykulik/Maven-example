@@ -6,10 +6,13 @@
     <!--Что то типа HashMap-s -->
     <bean id="bootstrap" class="ua.goit.java.Bootstrap">
         <property name="taskProvider" ref="taskProvider"/>
-        <!--<constructor-arg index="0" ref="taskProvider"/>-->
-        <!--<property name="executor" ref="serialExecutor"/>-->
+        <property name="executorFactory" ref="executorFactory"/>
     </bean>
     <bean id="taskProvider" class="ua.goit.java.IntegerTaskProvider" init-method="init"/>
-<!--Назовем bean serialExecutor что бы не путаться-->
+    <!--Назовем bean serialExecutor что бы не путаться-->
     <bean id="serialExecutor" class="ua.goit.java.SerialExecutor" scope="prototype"/>
+    <bean id="executorFactory" class="ua.goit.java.ExecutorFactory">
+        <lookup-method name="getIntegerExecutor" bean="serialExecutor"/>
+    </bean>
+
 </beans>
