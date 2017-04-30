@@ -4,6 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!--Что то типа HashMap-s -->
-    <bean id="bootstrap" class="ua.goit.java.Bootstrap"/>
-
+    <bean id="bootstrap" class="ua.goit.java.Bootstrap">
+        <property name="taskProvider" ref="taskProvider"/>
+        <!--<constructor-arg index="0" ref="taskProvider"/>-->
+        <!--<property name="executor" ref="serialExecutor"/>-->
+    </bean>
+    <bean id="taskProvider" class="ua.goit.java.IntegerTaskProvider" init-method="init"/>
+<!--Назовем bean serialExecutor что бы не путаться-->
+    <bean id="serialExecutor" class="ua.goit.java.SerialExecutor" scope="prototype"/>
 </beans>

@@ -1,53 +1,52 @@
 package ua.goit.java;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Created by Vasiliy Kylik on 09.04.2017.
  */
-public class Bootstrap {
+public class Bootstrap implements ApplicationContextAware {
+  public void setApplicationContext(ApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+  }
+
+  private ApplicationContext applicationContext;
+  private TaskProvider<Integer> taskProvider;
+  /*private Executor<Integer> executor;*/
+
+/*  public Bootstrap(TaskProvider<Integer> taskProvider) {
+    this.taskProvider = taskProvider;
+  }*/
 
   public static void main(String[] args) {
     ApplicationContext applicationContext = new ClassPathXmlApplicationContext("application-context.xml");
     Bootstrap bootstrap = applicationContext.getBean("bootstrap", Bootstrap.class);
+    bootstrap.setApplicationContext(applicationContext);
+    bootstrap.execute();
     bootstrap.execute();
   }
 
   public void execute() {
-    SerialExecutor<Integer> serialExecutor = new SerialExecutor<>();
-    serialExecutor.addTask(new AddTask(1, -2));
-    serialExecutor.addTask(new AddTask(1, 2), result -> result >= 0);
-    serialExecutor.addTask(new AddTask(1, -2), result -> result >= 0);
-    serialExecutor.addTask(new AddTask(Integer.MAX_VALUE, 1), result -> result >= 0);
-
-    serialExecutor.execute();
-// через метод Reference
+Executor<Integer> executor = getExecutor();
+    taskProvider.getAllTasks().forEach(executor::addTask);
+    executor.execute();
     System.out.println("Valid Results");
-    serialExecutor.getValidResults().forEach(System.out::println);
+    executor.getValidResults().forEach(System.out::println);
     System.out.println("Invalid Results");
-    serialExecutor.getInvalidResults().forEach(System.out::println);
+    executor.getInvalidResults().forEach(System.out::println);
   }
 
-  private static class AddTask implements Task<Integer> {
-    /*Сложно здесь показать что такое TDD или Design */
-    private int value1;
-    private int value2;
-    private int result;
-
-    public AddTask(int value1, int value2) {
-      this.value1 = value1;
-      this.value2 = value2;
-    }
-
-    @Override
-    public void execute() {
-      result = value1 + value2;
-    }
-
-    @Override
-    public Integer getResult() {
-      return result;
-    }
+  private  Executor<Integer> getExecutor(){
+    return (Executor<Integer>) applicationContext.getBean("serialExecutor");
   }
+
+  public void setTaskProvider(TaskProvider<Integer> taskProvider) {
+    this.taskProvider = taskProvider;
+  }
+
+/*  public void setExecutor(Executor<Integer> executor) {
+    this.executor = executor;
+  }*/
 }

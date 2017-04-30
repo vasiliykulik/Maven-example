@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SerialExecutor<T> implements Executor<T> {
 
-  /*Валидатор типизирован по Object  иможет быть использован с любыми объектами*/
+
   private static final Validator<Object> DEFAULT_VALIDATOR = value -> true;
 
   private List<TaskAndValidator<T>> tasks = new ArrayList<>();
@@ -28,13 +28,12 @@ public class SerialExecutor<T> implements Executor<T> {
 
   @Override
   public void addTask(Task<? extends T> task, Validator<? super T> validator) {
-    /*Дизайнерская задача, задача ассоциированая с валидатором MAP */
+
     tasks.add(new TaskAndValidator<T>(task, validator));
-/*Сложность в том что надо синхронизировать две коллекции, они должны иметь синхрорнные состояния
- Также task mutable объект и его кто от может изменить, и поиск по hashcode-у - ничего не принесет*/
+
   }
 
-  /*Давайте имплентировать дальше*/
+
   @Override
   public void execute() {
     checkNotExecuted();
@@ -64,20 +63,20 @@ public class SerialExecutor<T> implements Executor<T> {
 
 
   private void checkNotExecuted() {
-    // нужно проверить что мы еще не executed
+
     if(executed){
       throw  new  IllegalStateException("Executor already executed");
     }
   }
   private void checkExecuted() {
-    // нужно проверить что мы еще не executed
+
     if(!executed){
       throw  new  IllegalStateException("Executor already executed");
     }
   }
-  /*Для пары значений ВСЕГДА создавайте класс обертку*/
+
   private static class TaskAndValidator<T> {
-    /*можно отойти от бездумного создания get и set*/
+
     private Task<? extends T> task;
     private Validator<? super T> validator;
 
