@@ -9,12 +9,12 @@ import java.util.List;
 /**
  * Created by Vasiliy Kylik on 01.05.2017.
  */
-@Component
+
 public class IntegerTaskProvider implements TaskProvider<Integer> {
 
   private List<Task<Integer>> tasks = new ArrayList<>();
 
-  @PostConstruct
+
   public void init() {
     tasks.add(new AddTask(1, 2));
     tasks.add(new AddTask(1, -2));

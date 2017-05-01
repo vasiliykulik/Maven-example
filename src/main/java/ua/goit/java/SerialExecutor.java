@@ -11,8 +11,7 @@ import java.util.List;
  */
 /*Однопоточная последовательная имплементация*/
 /*Первым делом создаем тесты Ctrl + Shift + T*/
-@Component
-@Scope("prototype")
+
 public class SerialExecutor<T> implements Executor<T> {
 
 
