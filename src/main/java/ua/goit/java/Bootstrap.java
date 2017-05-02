@@ -24,6 +24,7 @@ public class Bootstrap {
     taskProvider.getAllTasks().forEach(executor::addTask);
     executor.execute();
     System.out.println("Valid Results");
+    /*AOP срабатывает вот здесь*/
     executor.getValidResults().forEach(System.out::println);
     System.out.println("Invalid Results");
     executor.getInvalidResults().forEach(System.out::println);

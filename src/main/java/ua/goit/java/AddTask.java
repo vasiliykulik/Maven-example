@@ -22,4 +22,13 @@ class AddTask implements Task<Integer> {
   public Integer getResult() {
     return result;
   }
+
+  @Override
+  public String toString() {
+    return "AddTask{" +
+            "value1=" + value1 +
+            ", value2=" + value2 +
+            ", result=" + result +
+            '}';
+  }
 }
