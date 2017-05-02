@@ -1,15 +1,12 @@
 package ua.goit.java;
 
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by Vasiliy Kylik on 09.04.2017.
  */
-
 public class Bootstrap {
 
   private TaskProvider<Integer> taskProvider;
@@ -31,7 +28,6 @@ public class Bootstrap {
     System.out.println("Invalid Results");
     executor.getInvalidResults().forEach(System.out::println);
   }
-
 
   public void setTaskProvider(TaskProvider<Integer> taskProvider) {
     this.taskProvider = taskProvider;

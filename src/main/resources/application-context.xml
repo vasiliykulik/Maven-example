@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-    <context:component-scan base-package="ua.goit.java"/>
-    <context:annotation-config/>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--Что то типа HashMap-s -->
+    <bean id="bootstrap" class="ua.goit.java.Bootstrap">
+        <property name="taskProvider" ref="taskProvider"/>
+        <property name="executorFactory" ref="executorFactory"/>
+    </bean>
+    <bean id="taskProvider" class="ua.goit.java.IntegerTaskProvider" init-method="init"/>
+    <!--Назовем bean serialExecutor что бы не путаться-->
+    <bean id="serialExecutor" class="ua.goit.java.SerialExecutor" scope="prototype"/>
+
+    <!--Передадим наш serialExecutor сюда-->
+    <bean id = "executorProxy" class="ua.goit.java.ExecutorProxy" scope="prototype">
+        <property name="executor" ref="serialExecutor"/>
+    </bean>
+
+    <bean id="executorFactory" class="ua.goit.java.ExecutorFactory">
+        <lookup-method name="getIntegerExecutor" bean="executorProxy"/>
+    </bean>
+
 </beans>
