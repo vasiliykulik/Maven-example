@@ -7,6 +7,7 @@ import java.util.List;
  */
 public class ExecutorProxy<T> implements Executor<T> {
 
+
   private Executor<T> executor;
 
   /*Поле Setter Делегировать */

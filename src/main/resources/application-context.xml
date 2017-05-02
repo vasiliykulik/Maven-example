@@ -3,22 +3,24 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!--Что то типа HashMap-s -->
+
     <bean id="bootstrap" class="ua.goit.java.Bootstrap">
         <property name="taskProvider" ref="taskProvider"/>
         <property name="executorFactory" ref="executorFactory"/>
     </bean>
     <bean id="taskProvider" class="ua.goit.java.IntegerTaskProvider" init-method="init"/>
-    <!--Назовем bean serialExecutor что бы не путаться-->
+
     <bean id="serialExecutor" class="ua.goit.java.SerialExecutor" scope="prototype"/>
 
-    <!--Передадим наш serialExecutor сюда-->
-    <bean id = "executorProxy" class="ua.goit.java.ExecutorProxy" scope="prototype">
-        <property name="executor" ref="serialExecutor"/>
-    </bean>
-
     <bean id="executorFactory" class="ua.goit.java.ExecutorFactory">
-        <lookup-method name="getIntegerExecutor" bean="executorProxy"/>
+        <lookup-method name="getIntegerExecutor" bean="serialExecutor"/>
     </bean>
 
+
+    <bean id="executorInterceptor" class="ua.goit.java.ExecutorInterceptor"/>
+
+    <bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+        <property name="beanNames" value="*Executor"/>
+        <property name="interceptorNames" value="executorInterceptor"/>
+    </bean>
 </beans>
